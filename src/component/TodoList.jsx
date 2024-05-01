@@ -14,6 +14,8 @@ import {
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import TodoData from './TodoData';
 import AddTodo from './modal/AddTodo';
+import { IoIosSearch } from 'react-icons/io';
+
 
 const getTodos = localStorage.getItem('todos');
 const TodoList = () => {
@@ -152,12 +154,15 @@ const TodoList = () => {
               </MenuItem>
             </MenuList>
           </Menu>
-          <Box>
+          <Box position={"relative"}>
             <Input
               placeholder="search"
               onChange={e => setSearchTerm(e.target.value)}
               value={searchTerm}
             />
+            <Box position={"absolute"} right={"0"} top={"0.7rem"} fontSize={"1.3rem"} pr={"0.6rem"}>
+              <IoIosSearch />
+            </Box>
           </Box>
           <Button onClick={onOpen}>Add Task</Button>
           <AddTodo isOpen={isOpen} onClose={onClose} addTask={addTask} />
