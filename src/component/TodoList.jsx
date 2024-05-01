@@ -1,22 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
   Flex,
   Input,
   Text,
-  Select,
   useDisclosure,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from '@chakra-ui/react';
-import AddTodo from './modal/AddTodo';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import TodoData from './TodoData';
+import AddTodo from './modal/AddTodo';
 
+const getTodos = localStorage.getItem('todos');
 const TodoList = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [todos, setTodos] = useState([]);
-  const [categoryFilter, setCategoryFilter] = useState('All'); 
-  const [deadlineFilter, setDeadlineFilter] = useState('All'); 
-    const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('All');
+  const [deadlineFilter, setDeadlineFilter] = useState('All');
+  const [todos, setTodos] = useState(JSON.parse(getTodos) || []);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
+
   const addTask = newTask => {
     setTodos([...todos, newTask]);
     onClose(true);
@@ -34,57 +44,126 @@ const TodoList = () => {
     setTodos(updatedTodos);
   };
 
-    const filteredTodos = todos.filter(todo => {
-      const categoryMatch =
-        categoryFilter === 'All' || todo.category === categoryFilter;
-      const deadlineMatch =
-        deadlineFilter === 'All' || todo.deadline === deadlineFilter;
-      const searchMatch =
-        todo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        todo.description.toLowerCase().includes(searchTerm.toLowerCase());
-      return categoryMatch && deadlineMatch && searchMatch;
+  const handleToggleTask = index => {
+    const newTodos = todos.map((todo, currentIndex) => {
+      if (currentIndex === index) {
+        const updatedTodo = { ...todo, completed: !todo.completed };
+        console.log('Checkbox value:', updatedTodo.completed);
+        return updatedTodo;
+      }
+      return todo;
     });
+    setTodos(newTodos);
+  };
+
+  const handleCategoryFilterChange = value => {
+    setCategoryFilter(value);
+  };
+
+  const handleDeadlineFilterChange = value => {
+    setDeadlineFilter(value);
+  };
+
+  const filteredTodos = todos.filter(todo => {
+    const categoryMatch =
+      categoryFilter === 'All' || todo.category === categoryFilter;
+    const deadlineMatch =
+      deadlineFilter === 'All' || todo.deadline === deadlineFilter;
+    const searchMatch =
+      todo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      todo.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return categoryMatch && deadlineMatch && searchMatch;
+  });
+
   return (
-    <Box width={'100%'}>
-      <Flex justifyContent={'space-between'}>
-        <Text>TODOLIST</Text>
-        {/* <Text>Category</Text>
-        <Input width={'10rem'} placeholder="Search" />
-        <Text>Deadline</Text> */}
-        <Text>Category</Text>
-        {/* Replace Input with Select */}
-        <Select
-          width={'10rem'}
-          value={categoryFilter}
-          onChange={e => setCategoryFilter(e.target.value)}
-        >
-          <option value="All">All</option>
-          <option value="work">Work</option>
-          <option value="personal">Personal</option>
-          <option value="health">Health</option>
-          <option value="family">Family</option>
-          <option value="finance">Finance</option>
-        </Select>
-        <Input
-          placeholder="search"
-          onChange={e => setSearchTerm(e.target.value)}
-          value={searchTerm}
-        />
-        <Text>Deadline</Text>
-        {/* Replace Input with Select */}
-        <Select
-          width={'10rem'}
-          value={deadlineFilter}
-          onChange={e => setDeadlineFilter(e.target.value)}
-        >
-          <option value="All">All</option>
-          <option value="passed">Passed</option>
-          <option value="today">Today</option>
-          <option value="Tomorrow">Tomorrow</option>
-        </Select>
-        <Button onClick={onOpen}>Add Task</Button>
-        <AddTodo isOpen={isOpen} onClose={onClose} addTask={addTask} />
+    <Box width={'100%'} height={'100%'}>
+      <Flex
+        gap={'30%'}
+        background={'#352121'}
+        boxShadow="0px 4px 6px rgba(0, 0, 0, 0.1)"
+        zIndex={999}
+        p={'2rem'}
+        color={'white'}
+      >
+        <Text fontSize={'1.5rem'} fontWeight={'700'}>
+          TODO LIST
+        </Text>
+        <Flex gap={'5rem'}>
+          <Menu background={'#352121'}>
+            <MenuButton color="white" fontSize={'1.3rem'} fontWeight={'600'}>
+              Category <ChevronDownIcon />
+            </MenuButton>
+            <MenuList color={'white'} background={'#352121'}>
+              <MenuItem
+                onClick={() => handleCategoryFilterChange('All')}
+                background={'#352121'}
+              >
+                All
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleCategoryFilterChange('Work')}
+                background={'#352121'}
+              >
+                Work
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleCategoryFilterChange('Personal')}
+                background={'#352121'}
+              >
+                Personal
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleCategoryFilterChange('Health')}
+                background={'#352121'}
+              >
+                Health
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleCategoryFilterChange('Family')}
+                background={'#352121'}
+              >
+                Family
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleCategoryFilterChange('Finance')}
+                background={'#352121'}
+              >
+                Finance
+              </MenuItem>
+            </MenuList>
+          </Menu>
+
+          <Menu>
+            <MenuButton color="white" fontSize={'1.3rem'} fontWeight={'600'}>
+              Deadline <ChevronDownIcon />
+            </MenuButton>
+            <MenuList color={'black'}>
+              <MenuItem onClick={() => handleDeadlineFilterChange('All')}>
+                All
+              </MenuItem>
+              <MenuItem onClick={() => handleDeadlineFilterChange('Passed')}>
+                Passed
+              </MenuItem>
+              <MenuItem onClick={() => handleDeadlineFilterChange('Today')}>
+                Today
+              </MenuItem>
+              <MenuItem onClick={() => handleDeadlineFilterChange('Tomorrow')}>
+                Tomorrow
+              </MenuItem>
+            </MenuList>
+          </Menu>
+          <Box>
+            <Input
+              placeholder="search"
+              onChange={e => setSearchTerm(e.target.value)}
+              value={searchTerm}
+            />
+          </Box>
+          <Button onClick={onOpen}>Add Task</Button>
+          <AddTodo isOpen={isOpen} onClose={onClose} addTask={addTask} />
+        </Flex>
       </Flex>
+
       <Box>
         {filteredTodos.map((todo, index) => (
           <TodoData
@@ -93,6 +172,7 @@ const TodoList = () => {
             todo={todo}
             handleDeleteTask={handleDeleteTask}
             updateTodoList={updateTodoList}
+            handleToggleTask={handleToggleTask}
           />
         ))}
       </Box>
@@ -101,4 +181,3 @@ const TodoList = () => {
 };
 
 export default TodoList;
-

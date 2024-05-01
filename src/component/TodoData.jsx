@@ -1,24 +1,123 @@
 import React from 'react';
-import { Box, Button, useDisclosure } from '@chakra-ui/react';
+import { Box, useDisclosure, Text, Flex, Checkbox } from '@chakra-ui/react';
 import EditTodo from './modal/EditTodo';
+import { MdDelete } from 'react-icons/md';
+import { RiEdit2Fill } from 'react-icons/ri';
 
-const TodoData = ({ todo, index, handleDeleteTask, updateTodoList }) => {
+const TodoData = ({
+  todo,
+  index,
+  handleDeleteTask,
+  updateTodoList,
+  handleToggleTask,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const updateTask = updatedTodo => {
     updateTodoList(updatedTodo, index);
   };
 
+  const getCategoryBackgroundColor = category => {
+    switch (category) {
+      case 'Work':
+        return '#ff9999';
+      case 'Personal':
+        return '#99ccff';
+      case 'Health':
+        return 'green';
+      case 'Family':
+        return '#ffc266';
+      case 'Finance':
+        return '#ffff99';
+      default:
+        return '#bfa3a3';
+    }
+  };
+
+  const getDeadlineBackgroundColor = deadline => {
+    switch (deadline) {
+      case 'Passed':
+        return '#ff9999';
+      case 'Today':
+        return '#E5E4E2';
+      case 'Tomorrow':
+        return '#ffff99';
+      default:
+        return '#bfa3a3';
+    }
+  };
+
   return (
-    <Box key={index}>
-      <Box>
-        <h3>{todo.title}</h3>
-        <p>{todo.description}</p>
-        <p>Category: {todo.category}</p>
-        <p>Deadline: {todo.deadline}</p>
-        <p>Completed: {todo.completed ? 'Yes' : 'No'}</p>{' '}
-        <Button onClick={() => handleDeleteTask(index)}>Delete</Button>
-        <Button onClick={onOpen}>Edit</Button>
+    <Box key={index} width={'100%'} overflow={'hidden'}>
+      <Box
+        width={'35%'}
+        margin={'auto'}
+        background={'white'}
+        border={'1px solid rgba(0, 0, 0, 0.11)'}
+        mt={'2rem'}
+      >
+        <Box
+          padding={'1rem 2rem'}
+          color={'#352121'}
+          style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
+          position={'relative'}
+        >
+            <Text
+              fontWeight={'600'}
+              fontSize={'1.3rem'}
+              style={{
+                textDecoration: todo.completed ? 'line-through' : 'none',
+              }}
+            >
+              {todo.title}
+            </Text>
+          <Flex gap={'2rem'} mt={'1rem'} position={'relative'}>
+            <Text fontSize={'0.8rem'} fontWeight={'500'} width={'85%'}>
+              {todo.description}
+            </Text>
+            <Box position={'absolute'} right={'1.5rem'}>
+              <Checkbox
+                isChecked={todo.completed}
+                onChange={() => handleToggleTask(index)}
+              ></Checkbox>
+            </Box>
+          </Flex>
+          <Flex gap={'1rem'} mt={'2rem'} fontSize={'14px'}>
+            <Text
+              background={getCategoryBackgroundColor(todo.category)}
+              width={'20%'}
+              p={'0.3rem'}
+              borderRadius={'2rem'}
+              textAlign={'center'}
+              color={'white'}
+            >
+              {todo.category}
+            </Text>
+            <Text
+              background={getDeadlineBackgroundColor(todo.deadline)}
+              width={'20%'}
+              p={'0.3rem'}
+              borderRadius={'2rem'}
+              textAlign={'center'}
+            >
+              {todo.deadline}
+            </Text>
+          </Flex>
+          <Flex
+            fontSize={'1.5rem'}
+            gap={'1rem'}
+            position={'absolute'}
+            right={'1rem'}
+            bottom={'1rem'}
+          >
+            <Box onClick={() => handleDeleteTask(index)} color={'#C41E3A'}>
+              <MdDelete />
+            </Box>
+            <Box onClick={onOpen} color={'#228B22'}>
+              <RiEdit2Fill />
+            </Box>
+          </Flex>
+        </Box>
       </Box>
       <EditTodo
         isOpen={isOpen}
@@ -31,4 +130,3 @@ const TodoData = ({ todo, index, handleDeleteTask, updateTodoList }) => {
 };
 
 export default TodoData;
-

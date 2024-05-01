@@ -31,9 +31,7 @@ const AddTodo = ({ isOpen, onClose, addTask }) => {
       deadline: deadline,
       completed: false,
     };
-
     addTask(newTask);
-
     setTitle('');
     setDescription('');
     setCategory('');
@@ -53,45 +51,45 @@ const AddTodo = ({ isOpen, onClose, addTask }) => {
         <ModalBody>
           <form onSubmit={handleSubmit}>
             <FormControl>
-              <FormLabel>Title</FormLabel>
+              <FormLabel mt={'1rem'}>Title</FormLabel>
               <Input
                 type="text"
                 value={title}
                 onChange={e => setTitle(e.target.value)}
               />
-              <FormLabel>Description</FormLabel>
+              <FormLabel mt={'1rem'}>Description</FormLabel>
               <Textarea
                 value={description}
                 onChange={e => setDescription(e.target.value)}
               />
-              <FormLabel>Category</FormLabel>
+              <FormLabel mt={'1rem'}>Category</FormLabel>
               <Select
                 placeholder="Select option"
                 value={category}
                 onChange={e => setCategory(e.target.value)}
               >
-                <option value="work">Work</option>
-                <option value="personal">Personal</option>
-                <option value="health">Health</option>
-                <option value="family">Family</option>
-                <option value="finance">Finance</option>
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+                <option value="Health">Health</option>
+                <option value="Family">Family</option>
+                <option value="Finance">Finance</option>
               </Select>
-              <FormLabel>Deadline</FormLabel>
+              <FormLabel mt={'1rem'}>Deadline</FormLabel>
               <Select
                 placeholder="Select option"
                 value={deadline}
                 onChange={e => setDeadline(e.target.value)}
               >
-                <option value="passed">Passed</option>
-                <option value="today">Today</option>
+                <option value="Passed">Passed</option>
+                <option value="Today">Today</option>
                 <option value="Tomorrow">Tomorrow</option>
               </Select>
             </FormControl>
           </form>
         </ModalBody>
-        <ModalFooter>
+        <ModalFooter gap={'2rem'}>
           <Button type="submit" onClick={handleSubmit}>
-            Submit
+            Add  Todo
           </Button>
           <Button onClick={onClose}>Close</Button>
         </ModalFooter>
@@ -100,4 +98,4 @@ const AddTodo = ({ isOpen, onClose, addTask }) => {
   );
 };
 
-export default AddTodo
+export default AddTodo;
