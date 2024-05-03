@@ -41,7 +41,7 @@ const EditTodo = ({ isOpen, onClose, updateTask, todo }) => {
       deadline,
     };
    toast({
-     title: 'Todo updated successfully!',
+     title: 'Task updated successfully!',
      status: 'success',
      duration: 2000,
      isClosable: true,

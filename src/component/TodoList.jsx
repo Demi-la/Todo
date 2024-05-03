@@ -25,7 +25,7 @@ const TodoList = () => {
     setTodos(addNewTodos);
 
      toast({
-       title: 'Todo added successfully!',
+       title: 'Task added successfully!',
        status: 'success',
        duration: 2000,
        isClosable: true,
@@ -41,7 +41,7 @@ const TodoList = () => {
     updatedTodos.splice(index, 1);
     setTodos(updatedTodos);
    toast({
-     title: 'Todo deleted successfully!',
+     title: 'Task deleted successfully!',
      status: 'warning',
      duration: 2000,
      isClosable: true,

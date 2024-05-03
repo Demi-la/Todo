@@ -64,7 +64,7 @@ const AddTodo = ({ isOpen, onClose, addTask }) => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInBottom">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add Todo</ModalHeader>

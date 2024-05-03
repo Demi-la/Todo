@@ -1,9 +1,9 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { Box, useDisclosure, Text, Flex, Checkbox } from '@chakra-ui/react';
 import EditTodo from './modal/EditTodo';
 import { MdDelete } from 'react-icons/md';
 import { RiEdit2Fill } from 'react-icons/ri';
-
+import ConfirmationModal from './modal/ConfirmationModal';
 const TodoData = ({
   todo,
   index,
@@ -13,10 +13,23 @@ const TodoData = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const updateTask = updatedTodo => {
     updateTodoList(updatedTodo, index);
   };
 
+    const openConfirmation = () => {
+      setIsConfirmationOpen(true);
+    };
+
+    const closeConfirmation = () => {
+      setIsConfirmationOpen(false);
+    };
+
+    const handleConfirmDelete = () => {
+      handleDeleteTask(index);
+      closeConfirmation();
+    };
   const getCategoryBackgroundColor = category => {
     switch (category) {
       case 'Work':
@@ -124,7 +137,7 @@ const TodoData = ({
             right={'1rem'}
             bottom={'1rem'}
           >
-            <Box onClick={() => handleDeleteTask(index)} color={'#C41E3A'}>
+            <Box color={'#C41E3A'} onClick={openConfirmation}>
               <MdDelete />
             </Box>
             <Box onClick={onOpen} color={'#228B22'}>
@@ -138,6 +151,12 @@ const TodoData = ({
         onClose={onClose}
         updateTask={updateTask}
         todo={todo}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmationOpen}
+        onClose={closeConfirmation}
+        onConfirm={handleConfirmDelete}
+        handleDeleteTask={handleDeleteTask}
       />
     </Box>
   );
