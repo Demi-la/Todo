@@ -16,7 +16,6 @@ import TodoData from './TodoData';
 import AddTodo from './modal/AddTodo';
 import { IoIosSearch } from 'react-icons/io';
 
-
 const getTodos = localStorage.getItem('todos');
 const TodoList = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -24,6 +23,8 @@ const TodoList = () => {
   const [deadlineFilter, setDeadlineFilter] = useState('All');
   const [todos, setTodos] = useState(JSON.parse(getTodos) || []);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [todosPerPage] = useState(2);
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -60,22 +61,54 @@ const TodoList = () => {
 
   const handleCategoryFilterChange = value => {
     setCategoryFilter(value);
+    setCurrentPage(1);
   };
 
   const handleDeadlineFilterChange = value => {
     setDeadlineFilter(value);
+    setCurrentPage(1);
   };
 
-  const filteredTodos = todos.filter(todo => {
-    const categoryMatch =
-      categoryFilter === 'All' || todo.category === categoryFilter;
-    const deadlineMatch =
-      deadlineFilter === 'All' || todo.deadline === deadlineFilter;
-    const searchMatch =
-      todo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      todo.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return categoryMatch && deadlineMatch && searchMatch;
-  });
+  const handleSearchChange = value => {
+    setSearchTerm(value);
+    //  setCurrentPage(1);
+  };
+
+  const filterTodos = () => {
+    return todos.filter(todo => {
+      const categoryMatch =
+        categoryFilter === 'All' || todo.category === categoryFilter;
+      const deadlineMatch =
+        deadlineFilter === 'All' || todo.deadline === deadlineFilter;
+      const searchMatch =
+        todo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        todo.description.toLowerCase().includes(searchTerm.toLowerCase());
+      return categoryMatch && deadlineMatch && searchMatch;
+    });
+  };
+
+  const getPaginatedTodos = () => {
+    const filtered = filterTodos();
+    const indexOfLastTodo = currentPage * todosPerPage;
+    const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
+    return filtered.slice(indexOfFirstTodo, indexOfLastTodo);
+  };
+
+  const getTotalPages = () => {
+    return Math.ceil(filterTodos().length / todosPerPage);
+  };
+
+  const nextPage = () => {
+    if (currentPage < getTotalPages()) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   return (
     <Box width={'100%'} height={'100%'}>
@@ -154,13 +187,19 @@ const TodoList = () => {
               </MenuItem>
             </MenuList>
           </Menu>
-          <Box position={"relative"}>
+          <Box position={'relative'}>
             <Input
               placeholder="search"
               onChange={e => setSearchTerm(e.target.value)}
               value={searchTerm}
             />
-            <Box position={"absolute"} right={"0"} top={"0.7rem"} fontSize={"1.3rem"} pr={"0.6rem"}>
+            <Box
+              position={'absolute'}
+              right={'0'}
+              top={'0.7rem'}
+              fontSize={'1.3rem'}
+              pr={'0.6rem'}
+            >
               <IoIosSearch />
             </Box>
           </Box>
@@ -170,7 +209,7 @@ const TodoList = () => {
       </Flex>
 
       <Box>
-        {filteredTodos.map((todo, index) => (
+        {getPaginatedTodos().map((todo, index) => (
           <TodoData
             key={index}
             index={index}
@@ -181,6 +220,35 @@ const TodoList = () => {
           />
         ))}
       </Box>
+      <Flex justifyContent="center" mt={'2rem'} gap={'1rem'}>
+        <Button
+          onClick={prevPage}
+          disabled={currentPage === 1}
+          colorScheme={currentPage === 1 ? 'gray' : 'teal'}
+          mx={1}
+        >
+          Previous
+        </Button>
+        {Array.from({ length: getTotalPages() }, (_, index) => (
+          <Button
+            key={index}
+            onClick={() => setCurrentPage(index + 1)}
+            variant={currentPage === index + 1 ? 'solid' : 'outline'}
+            colorScheme={currentPage === index + 1 ? 'teal' : 'gray'}
+            mx={1}
+          >
+            {index + 1}
+          </Button>
+        ))}
+        <Button
+          onClick={nextPage}
+          disabled={currentPage === getTotalPages()}
+          colorScheme={currentPage === 1 ? 'teal' : 'gray'}
+          mx={1}
+        >
+          Next
+        </Button>
+      </Flex>
     </Box>
   );
 };
