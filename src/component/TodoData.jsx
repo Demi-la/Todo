@@ -46,11 +46,12 @@ const TodoData = ({
         return '#bfa3a3';
     }
   };
+  
 
   return (
     <Box key={index} width={'100%'} overflow={'hidden'}>
       <Box
-        width={'35%'}
+        width={{ base: '90%', lg: '35%' }}
         margin={'auto'}
         background={'white'}
         border={'1px solid rgba(0, 0, 0, 0.11)'}
@@ -62,17 +63,25 @@ const TodoData = ({
           style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
           position={'relative'}
         >
+          <Text
+            fontWeight={'600'}
+            fontSize={'1.3rem'}
+            style={{
+              textDecoration: todo.completed ? 'line-through' : 'none',
+            }}
+          >
+            {todo.title}
+          </Text>
+          <Flex
+            gap={{ base: '3rem', lg: '2rem' }}
+            mt={'1rem'}
+            position={'relative'}
+          >
             <Text
-              fontWeight={'600'}
-              fontSize={'1.3rem'}
-              style={{
-                textDecoration: todo.completed ? 'line-through' : 'none',
-              }}
+              fontSize={'0.8rem'}
+              fontWeight={'500'}
+              width={{ base: '80%', lg: '85%' }}
             >
-              {todo.title}
-            </Text>
-          <Flex gap={'2rem'} mt={'1rem'} position={'relative'}>
-            <Text fontSize={'0.8rem'} fontWeight={'500'} width={'85%'}>
               {todo.description}
             </Text>
             <Box position={'absolute'} right={'1.5rem'}>
@@ -83,25 +92,30 @@ const TodoData = ({
             </Box>
           </Flex>
           <Flex gap={'1rem'} mt={'2rem'} fontSize={'14px'}>
-            <Text
-              background={getCategoryBackgroundColor(todo.category)}
-              width={'20%'}
-              p={'0.3rem'}
-              borderRadius={'2rem'}
-              textAlign={'center'}
-              color={'white'}
-            >
-              {todo.category}
-            </Text>
-            <Text
-              background={getDeadlineBackgroundColor(todo.deadline)}
-              width={'20%'}
-              p={'0.3rem'}
-              borderRadius={'2rem'}
-              textAlign={'center'}
-            >
-              {todo.deadline}
-            </Text>
+            {todo.category && (
+              <Text
+                background={getCategoryBackgroundColor(todo.category)}
+                minWidth={{ base: '25%', lg: '20%' }}
+                p={{ base: '0.3rem', lg: '0.3rem' }}
+                borderRadius={'2rem'}
+                textAlign={'center'}
+                color={'white'}
+              >
+                {todo.category}
+              </Text>
+            )}
+
+            {todo.deadline && (
+              <Text
+                background={getDeadlineBackgroundColor(todo.deadline)}
+                minWidth={{ base: '25%', lg: '20%' }}
+                p={'0.3rem'}
+                borderRadius={'2rem'}
+                textAlign={'center'}
+              >
+                {todo.deadline}
+              </Text>
+            )}
           </Flex>
           <Flex
             fontSize={'1.5rem'}
