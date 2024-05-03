@@ -22,7 +22,7 @@ This is a simple Todo List application built using React and Chakra UI. It allow
 2. Local Storage: Tasks are stored in the browser's local storage, allowing users to access their tasks even after closing the browser.
 3. User-Friendly Interface: The UI is designed to be intuitive and easy to use, with clear labels and feedback messages.
 4. Flexible Deadline Options: Users can select from predefined deadline options like "Today", "Tomorrow", or "Passed", making it easy to set deadlines   without manually entering dates.
-5. Editable Title: Although the title is displayed as a non-editable input to maintain consistency, users can still edit it by opening the task edit modal.
+
 
 ## Technologies Used
  ## `React`  
