@@ -59,7 +59,7 @@ const TodoList = () => {
     const newTodos = todos.map((todo, currentIndex) => {
       if (currentIndex === index) {
         const updatedTodo = { ...todo, completed: !todo.completed };
-        console.log('Checkbox value:', updatedTodo.completed);
+        // console.log('Checkbox value:', updatedTodo.completed);
         return updatedTodo;
       }
       return todo;

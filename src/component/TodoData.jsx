@@ -12,8 +12,7 @@ const TodoData = ({
   handleToggleTask,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const updateTask = updatedTodo => {
     updateTodoList(updatedTodo, index);
   };
